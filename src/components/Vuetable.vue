@@ -120,6 +120,12 @@ export default {
                 return 'links.pagination'
             }
         },
+        fieldsPath: {
+            type: String,
+            default: function _default() {
+                return 'links.fields';
+            }
+        },
         fields: {
             type: Array,
             required: true
@@ -398,6 +404,17 @@ export default {
                             + 'It looks like the data returned from the sever does not have pagination information '
                             + 'or you may have set it incorrectly.'
                         )
+                    }
+
+                    var fields = self.getObjectValue(response.data, self.fieldsPath, null)
+                    if( fields === null ) {
+                      console.warn('vuetable: fields-path "' + self.fieldsPath + '" not found. '
+                        + 'It looks like the data returned from the sever does not have fields information '
+                        + 'or you may have set it incorrectly.'
+                        )
+                    } else {
+                      self.fields = fields;
+                      self.normalizeFields();
                     }
 
                     self.dispatchEvent('load-success', response)
